@@ -9,6 +9,45 @@
 defined('LEGADO_BASE') or die('Direct access denied');
 
 class LegadoCSS {
+	
+	/**
+	 *
+	 * @var Array 
+	 */
+	private $browser = array();
+	
+	/**
+	 *
+	 * @var String 
+	 */
+	private $content;
+	
+	/**
+	 *
+	 * @var String 
+	 */
+	private $dictionary = null;
+	
+	
+	/**
+	 * Base live URL of where this librady is, or, at least, where public files
+	 * are.
+	 * 
+	 * @var String Default '' for base of site 
+	 */
+	private $baseurl = '';
+	
+	/**
+	 * Value that must have before the propetie to allow
+	 * 
+	 * @var String 
+	 */
+	protected $prefix = "\t";
+	
+	/**
+	 * @var String
+	 */
+	protected $result = '';
 
 	/**
 	 * 
@@ -83,7 +122,42 @@ class LegadoCSS {
 	public function get($name) {
 		return $this->$name;
 	}
+	
+	/**
+	 * Return parsed content
+	 * 
+	 * @return Mixed this->$name: value of var
+	 */
+	public function getContent() {
+		$this->loadDictionary();
+		
+		
+		
+		if (is_array($this->browser)) {
+			foreach ($this->browser AS $browser) {
+				$this->result = preg_replace($this->dictionary[$browser]['in'], $this->dictionary[$browser]['out'], $this->content);
+			}
+		}
+		
+		return $this->result;
+	}
 
+	/**
+	 * Return generic variable
+	 * 
+	 * @param String $name: name of var to return
+	 * @return Object $this Suport for method chaining
+	 */
+	public function loadDictionary($replace = false) {
+		if($this->dictionary === null || $replace){
+			$prefix = $this->prefix;
+			$url = $this->baseurl;
+			include_once 'dictionary.php';
+			$this->dictionary = $cd;
+		}
+		return $this;
+	}
+	
 	/**
 	 * Set one generic variable the desired value
 	 * 
@@ -93,6 +167,31 @@ class LegadoCSS {
 	 */
 	public function set($name, $value) {
 		$this->$name = $value;
+		return $this;
+	}
+	
+	/**
+	 * Set browser engine name
+	 * 
+	 * @param String $name: name of browser
+	 * @return Object $this Suport for method chaining
+	 */
+	public function setContent($content) {
+		$this->content = $content;
+		return $this;
+	}
+	
+	/**
+	 * Set browser engine name
+	 * 
+	 * @param String $name: name of browser
+	 * @return Object $this Suport for method chaining
+	 */
+	public function setBrowser($name) {
+		$name = strtolower($name);
+		if(!array_search($name, $this->browser)){
+			$this->browser[] = $name;
+		}
 		return $this;
 	}
 
