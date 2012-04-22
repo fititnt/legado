@@ -8,7 +8,7 @@
  */
 defined('LEGADO_BASE') or die('Direct access denied');
 
-class LegadoIO {
+class LegadoBrowser {
 
 	/**
 	 * Array to contain RAW content to output

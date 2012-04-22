@@ -9,6 +9,12 @@
 defined('LEGADO_BASE') or die('Direct access denied');
 
 abstract class Legado {
+	
+	/**
+	 *
+	 * @var Object $css
+	 */
+	public static $browser;
 
 	/**
 	 *
@@ -27,6 +33,20 @@ abstract class Legado {
 	 * @var Object $js
 	 */
 	public static $js;
+	
+	/**
+	 * Return Browser Object, creating if aready doesent exists
+	 *
+	 * @return Object $generic
+	 */
+	public static function getBrowser() {
+		if (!self::$browser) {
+			require_once '/browser/load.php';
+
+			self::$browser = LoadBrowser::getInstance();
+		}
+		return self::$browser;
+	}
 
 	/**
 	 * Return CSS Object, creating if aready doesent exists
